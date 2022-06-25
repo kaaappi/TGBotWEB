@@ -34,7 +34,7 @@ namespace tryWeb.TG_bot
         {
             var ErrorMessage = exception switch
             {
-                ApiRequestException apiRequestException => $"Помилка в телеграм бот АПІ:\n {apiRequestException.ErrorCode}" +
+                ApiRequestException apiRequestException => $"Помилка в телеграм бот АПI:\n {apiRequestException.ErrorCode}" +
                 $"\n{apiRequestException.Message}",
                 _ => exception.ToString()
             };
@@ -58,20 +58,11 @@ namespace tryWeb.TG_bot
             {
                 await HandlerCallbackQuery(botClient, update.CallbackQuery);
             }
-
-            else
-                if (message.Text == "/help")
-            {
-                await botClient.SendTextMessageAsync(message.Chat, "CFLEKNKEJDNLKEJCNLIHEBIB");
-                return;
-            }
-
-
             else
                 if (message.Text == "/start")
             {
                 await botClient.SendTextMessageAsync(message.Chat, "Виберіть команду /keyboard");
-                
+
                 List<string> strings = new List<string>();
                 var InDB = JsonConvert.SerializeObject(strings);
                 var ForDB = new ModelForDB
@@ -82,7 +73,7 @@ namespace tryWeb.TG_bot
                 var json1 = JsonConvert.SerializeObject(ForDB);
                 var data = new StringContent(json1, Encoding.UTF8, "application/json");
 
-                var url = $"{Constants.adressMyAPI}/GetCourseDate/AddFavs";
+                var url = $"{Constants.adressMyAPI}/GetCourse/AddFavs";
                 using var client = new HttpClient();
 
                 var response = await client.PostAsync(url, data);
@@ -282,6 +273,11 @@ namespace tryWeb.TG_bot
             {
                 var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourseDate/MarketsFromDBByID/{message.From.Id}");
                 var result = JsonConvert.DeserializeObject<List<string>>(json);
+                if (result.Count == 0)
+                {
+                    await botClient.SendTextMessageAsync(message.Chat.Id, $"До списку обраного ще нічого не додано", parseMode: ParseMode.Markdown);
+
+                }
                 for (int i = 0; i < result.Count; i++)
                 {
                     await botClient.SendTextMessageAsync(message.Chat.Id, $"Криптобіржа: {result[i]}", parseMode: ParseMode.Markdown);
@@ -301,12 +297,12 @@ namespace tryWeb.TG_bot
             else
                 if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Відправте назву криптобіржі, яку хочете видалити зі свого списку обраного"))
             {
-                var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourseDate/MarketsFromDBByID/{message.From.Id}");
+                var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourse/MarketsFromDBByID/{message.From.Id}");
                 var result = JsonConvert.DeserializeObject<List<string>>(json);
                 if (result.Contains(message.Text))
                 {
                     string MarketToDelete = message.Text;
-                    var url = $"{Constants.adressMyAPI}/GetCourseDate/DeleteFavs/{message.From.Id}/{MarketToDelete}";
+                    var url = $"{Constants.adressMyAPI}/GetCourse/DeleteFavs/{message.From.Id}/{MarketToDelete}";
                     using var client = new HttpClient();
                     await client.DeleteAsync(url);
                     await botClient.SendTextMessageAsync(message.Chat.Id, $"Кріптобіржу {MarketToDelete} видалено із списку обраного");
@@ -324,7 +320,7 @@ namespace tryWeb.TG_bot
             else
                 if (message.Text == "/deleteall")
             {
-                var url = $"{Constants.adressMyAPI}/GetCourseDate/DeleteFavs/{message.From.Id}/all";
+                var url = $"{Constants.adressMyAPI}/GetCourse/DeleteFavs/{message.From.Id}/all";
                 using var client = new HttpClient();
                 await client.DeleteAsync(url);
                 await botClient.SendTextMessageAsync(message.Chat.Id, $"Кріптобіржу видалено із списку обраного");
@@ -339,6 +335,7 @@ namespace tryWeb.TG_bot
             if (callbackQuery.Message.Text == "Виберіть криптобіржу:")
             {
                 var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourse/{callbackQuery.Data}");
+
                 await botClient.AnswerCallbackQueryAsync(callbackQuery.Id);
                 var result = JsonConvert.DeserializeObject<ModelCoinForBOT>(json);
                 await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, $"Криптобіржа: _{callbackQuery.Data}_" +
@@ -347,7 +344,7 @@ namespace tryWeb.TG_bot
             }
             if (callbackQuery.Message.Text == "Виберіть криптобіржу для додавання в Favs:")
             {
-                var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourseDate/MarketsFromDBByID/{callbackQuery.From.Id}");
+                var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourse/MarketsFromDBByID/{callbackQuery.From.Id}");
                 var result = JsonConvert.DeserializeObject<List<string>>(json);
 
                 result.Add(callbackQuery.Data);
