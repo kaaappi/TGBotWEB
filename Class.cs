@@ -357,7 +357,7 @@ namespace tryWeb.TG_bot
                 var json1 = JsonConvert.SerializeObject(ForDB);
                 var data = new StringContent(json1, Encoding.UTF8, "application/json");
 
-                var url = $"{Constants.adressMyAPI}/GetCourseDate/AddFavs";
+                var url = $"{Constants.adressMyAPI}/GetCourse/AddFavs";
                 using var client = new HttpClient();
 
                 var response = await client.PostAsync(url, data);
