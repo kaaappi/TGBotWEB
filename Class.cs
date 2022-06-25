@@ -278,6 +278,8 @@ namespace tryWeb.TG_bot
                     await botClient.SendTextMessageAsync(message.Chat.Id, $"До списку обраного ще нічого не додано", parseMode: ParseMode.Markdown);
 
                 }
+                await botClient.SendTextMessageAsync(message.Chat.Id, $"Список обраного:", parseMode: ParseMode.Markdown);
+
                 for (int i = 0; i < result.Count; i++)
                 {
                     await botClient.SendTextMessageAsync(message.Chat.Id, $"Криптобіржа: {result[i]}", parseMode: ParseMode.Markdown);
