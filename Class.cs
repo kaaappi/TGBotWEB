@@ -71,7 +71,7 @@ namespace tryWeb.TG_bot
                 if (message.Text == "/start")
             {
                 await botClient.SendTextMessageAsync(message.Chat, "Виберіть команду /keyboard");
-                return;
+                
                 List<string> strings = new List<string>();
                 var InDB = JsonConvert.SerializeObject(strings);
                 var ForDB = new ModelForDB
@@ -86,6 +86,7 @@ namespace tryWeb.TG_bot
                 using var client = new HttpClient();
 
                 var response = await client.PostAsync(url, data);
+                return;
             }
             else
                 if (message.Text == "/keyboard")
@@ -337,12 +338,12 @@ namespace tryWeb.TG_bot
             WebClient webClient = new WebClient();
             if (callbackQuery.Message.Text == "Виберіть криптобіржу:")
             {
-                var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourse/{callbackQuery.Data}");
-                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id);
-                var result = JsonConvert.DeserializeObject<ModelCoinForBOT>(json);
-                await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, $"Криптобіржа: _{callbackQuery.Data}_" +
-                    $"\nBitcoin до USD - *{result.Course}*\n", parseMode: ParseMode.Markdown);
-                return;
+                //var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourse/{callbackQuery.Data}");
+                //await botClient.AnswerCallbackQueryAsync(callbackQuery.Id);
+                //var result = JsonConvert.DeserializeObject<ModelCoinForBOT>(json);
+                //await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, $"Криптобіржа: _{callbackQuery.Data}_" +
+                //    $"\nBitcoin до USD - *{result.Course}*\n", parseMode: ParseMode.Markdown);
+                //return;
             }
             if (callbackQuery.Message.Text == "Виберіть криптобіржу для додавання в Favs:")
             {
