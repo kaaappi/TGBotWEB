@@ -271,7 +271,7 @@ namespace tryWeb.TG_bot
             else
                 if (message.Text == "/myfavs")
             {
-                var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourseDate/MarketsFromDBByID/{message.From.Id}");
+                var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourse/MarketsFromDBByID/{message.From.Id}");
                 var result = JsonConvert.DeserializeObject<List<string>>(json);
                 if (result.Count == 0)
                 {
@@ -348,6 +348,7 @@ namespace tryWeb.TG_bot
                 var result = JsonConvert.DeserializeObject<List<string>>(json);
 
                 result.Add(callbackQuery.Data);
+                result.Distinct();
                 var DATAToDB = JsonConvert.SerializeObject(result);
                 var ForDB = new ModelForDB
                 {
