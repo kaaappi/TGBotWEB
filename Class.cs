@@ -301,24 +301,24 @@ namespace tryWeb.TG_bot
             else
                 if (message.ReplyToMessage != null && message.ReplyToMessage.Text.Contains("Відправте назву криптобіржі, яку хочете видалити зі свого списку обраного"))
             {
-                //var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourseDate/MarketsFromDBByID/{message.From.Id}");
-                //var result = JsonConvert.DeserializeObject<List<string>>(json);
-                //if (result.Contains(message.Text))
-                //{
-                //    string MarketToDelete = message.Text;
-                //    var url = $"{Constants.adressMyAPI}/GetCourseDate/DeleteFavs/{message.From.Id}/{MarketToDelete}";
-                //    using var client = new HttpClient();
-                //    await client.DeleteAsync(url);
-                //    await botClient.SendTextMessageAsync(message.Chat.Id, $"Кріптобіржу {MarketToDelete} видалено із списку обраного");
-                //    return;
+                var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourseDate/MarketsFromDBByID/{message.From.Id}");
+                var result = JsonConvert.DeserializeObject<List<string>>(json);
+                if (result.Contains(message.Text))
+                {
+                    string MarketToDelete = message.Text;
+                    var url = $"{Constants.adressMyAPI}/GetCourseDate/DeleteFavs/{message.From.Id}/{MarketToDelete}";
+                    using var client = new HttpClient();
+                    await client.DeleteAsync(url);
+                    await botClient.SendTextMessageAsync(message.Chat.Id, $"Кріптобіржу {MarketToDelete} видалено із списку обраного");
+                    return;
 
 
-                //}
-                //else
-                //{
-                //    await botClient.SendTextMessageAsync(message.Chat.Id, $"Некоректні дані");
-                //    return;
-                //}
+                }
+                else
+                {
+                    await botClient.SendTextMessageAsync(message.Chat.Id, $"Некоректні дані");
+                    return;
+                }
 
             }
             else
@@ -338,12 +338,12 @@ namespace tryWeb.TG_bot
             WebClient webClient = new WebClient();
             if (callbackQuery.Message.Text == "Виберіть криптобіржу:")
             {
-                //var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourse/{callbackQuery.Data}");
-                //await botClient.AnswerCallbackQueryAsync(callbackQuery.Id);
-                //var result = JsonConvert.DeserializeObject<ModelCoinForBOT>(json);
-                //await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, $"Криптобіржа: _{callbackQuery.Data}_" +
-                //    $"\nBitcoin до USD - *{result.Course}*\n", parseMode: ParseMode.Markdown);
-                //return;
+                var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourse/{callbackQuery.Data}");
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id);
+                var result = JsonConvert.DeserializeObject<ModelCoinForBOT>(json);
+                await botClient.SendTextMessageAsync(callbackQuery.Message.Chat.Id, $"Криптобіржа: _{callbackQuery.Data}_" +
+                    $"\nBitcoin до USD - *{result.Course}*\n", parseMode: ParseMode.Markdown);
+                return;
             }
             if (callbackQuery.Message.Text == "Виберіть криптобіржу для додавання в Favs:")
             {
