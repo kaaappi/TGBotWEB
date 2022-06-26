@@ -215,7 +215,7 @@ namespace tryWeb.TG_bot
                                 {
 
                                     InlineKeyboardButton.WithCallbackData("AAX", $"aax"),
-                                    InlineKeyboardButton.WithCallbackData("Coinzoom", $"coinzoom")
+                                    InlineKeyboardButton.WithCallbackData("Bitget", $"bitget")
                                 },
                                 new[]
                                 {
@@ -254,7 +254,7 @@ namespace tryWeb.TG_bot
                                 {
 
                                     InlineKeyboardButton.WithCallbackData("AAX", $"AAX"),
-                                    InlineKeyboardButton.WithCallbackData("Bitfinex", $"Bitfinex")
+                                    InlineKeyboardButton.WithCallbackData("Bitget", $"Bitget")
                                 },
                                 new[]
                                 {
@@ -280,15 +280,12 @@ namespace tryWeb.TG_bot
                 }
                 else
                 {
-                    await botClient.SendTextMessageAsync(message.Chat.Id, $"Список обраного:", parseMode: ParseMode.Markdown);
-
                     for (int i = 0; i < result.Count; i++)
                     {
                         await botClient.SendTextMessageAsync(message.Chat.Id, $"Криптобіржа: {result[i]}", parseMode: ParseMode.Markdown);
 
                     }
                     return;
-
                 }
             }
 
@@ -305,9 +302,9 @@ namespace tryWeb.TG_bot
             {
                 var json = webClient.DownloadString($"{Constants.adressMyAPI}/GetCourse/MarketsFromDBByID/{message.From.Id}");
                 var result = JsonConvert.DeserializeObject<List<string>>(json);
-                if (result.Contains(message.Text))
+                if (result.Contains(message.Text.ToLower()))
                 {
-                    string MarketToDelete = message.Text;
+                    string MarketToDelete = message.Text.ToLower();
                     var url = $"{Constants.adressMyAPI}/GetCourse/DeleteFavs/{message.From.Id}/{MarketToDelete}";
                     using var client = new HttpClient();
                     await client.DeleteAsync(url);
@@ -329,7 +326,7 @@ namespace tryWeb.TG_bot
                 var url = $"{Constants.adressMyAPI}/GetCourse/DeleteFavs/{message.From.Id}/all";
                 using var client = new HttpClient();
                 await client.DeleteAsync(url);
-                await botClient.SendTextMessageAsync(message.Chat.Id, $"Кріптобіржу видалено із списку обраного");
+                await botClient.SendTextMessageAsync(message.Chat.Id, $"Усі криптобіржі видалено із списку обраного");
 
             }
         }
@@ -354,8 +351,8 @@ namespace tryWeb.TG_bot
                 var result = JsonConvert.DeserializeObject<List<string>>(json);
 
                 result.Add(callbackQuery.Data);
-                result.Distinct();
-                var DATAToDB = JsonConvert.SerializeObject(result);
+                IEnumerable<string> distinctList = result.Distinct();
+                var DATAToDB = JsonConvert.SerializeObject(distinctList);
                 var ForDB = new ModelForDB
                 {
                     UserID = callbackQuery.From.Id.ToString(),
