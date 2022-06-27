@@ -61,7 +61,7 @@ namespace tryWeb.TG_bot
             else
                 if (message.Text == "/start")
             {
-                await botClient.SendTextMessageAsync(message.Chat, "Виберіть команду /keyboard");
+                await botClient.SendTextMessageAsync(message.Chat, $"Привіт {message.Chat.FirstName} 👋 \nДля початку роботи з ботом виберіть команду /keyboard");
 
                 List<string> strings = new List<string>();
                 var InDB = JsonConvert.SerializeObject(strings);
@@ -154,8 +154,6 @@ namespace tryWeb.TG_bot
                 await botClient.SendTextMessageAsync(message.Chat.Id, $"Станом на: {result.FirstOrDefault().Exchangedate}\nКурс {result.FirstOrDefault().Cc} до гривні становить: *{result.FirstOrDefault().Rate}*", parseMode: ParseMode.Markdown);
 
                 return;
-
-
             }
             else
             if (message.Text == "Сьогодні")
@@ -311,8 +309,6 @@ namespace tryWeb.TG_bot
                     await client.DeleteAsync(url);
                     await botClient.SendTextMessageAsync(message.Chat.Id, $"Кріптобіржу {MarketToDelete} видалено із списку обраного");
                     return;
-
-
                 }
                 else
                 {
@@ -324,6 +320,7 @@ namespace tryWeb.TG_bot
             else
                 if (message.Text == "/deleteall")
             {
+
                 var url = $"{Constants.adressMyAPI}/GetCourse/DeleteFavs/{message.From.Id}/all";
                 using var client = new HttpClient();
                 await client.DeleteAsync(url);

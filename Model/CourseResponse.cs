@@ -11,8 +11,5 @@ namespace tryWeb.Model
         public string Rate { get; set; }
         public string Cc { get; set; }
         public string Exchangedate { get; set; }
-
-
-
     }
 }
