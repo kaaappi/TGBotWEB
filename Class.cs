@@ -252,7 +252,6 @@ namespace tryWeb.TG_bot
                                 },
                                 new[]
                                 {
-
                                     InlineKeyboardButton.WithCallbackData("AAX", $"AAX"),
                                     InlineKeyboardButton.WithCallbackData("Bitget", $"Bitget")
                                 },
@@ -280,9 +279,11 @@ namespace tryWeb.TG_bot
                 }
                 else
                 {
+                    await botClient.SendTextMessageAsync(message.Chat.Id, $"Список обраного:", parseMode: ParseMode.Markdown);
+
                     for (int i = 0; i < result.Count; i++)
                     {
-                        await botClient.SendTextMessageAsync(message.Chat.Id, $"Криптобіржа: {result[i]}", parseMode: ParseMode.Markdown);
+                        await botClient.SendTextMessageAsync(message.Chat.Id, $"*{i + 1}*.  `{result[i]}`", parseMode: ParseMode.Markdown);
 
                     }
                     return;
